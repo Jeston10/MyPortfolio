@@ -10,6 +10,7 @@ import {
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ChatBot from "../components/ChatBot";
 
 // Memoized Components
 const StatusBadge = memo(() => (
@@ -177,6 +178,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
+      <ChatBot />
       <div
         className={`relative z-10 transition-all duration-1000 ${
           isLoaded ? "opacity-100" : "opacity-0"

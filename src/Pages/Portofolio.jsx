@@ -397,7 +397,6 @@ export default function FullWidthTabs() {
       }));
 
       setProjects(projectData);
-      localStorage.setItem("projects", JSON.stringify(projectData));
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
@@ -405,14 +404,7 @@ export default function FullWidthTabs() {
 
   useEffect(() => {
     AOS.init({ once: false });
-
-    const cachedProjects = localStorage.getItem("projects");
-
-    if (cachedProjects) {
-      setProjects(JSON.parse(cachedProjects));
-    } else {
-      fetchProjects();
-    }
+    fetchProjects();
   }, [fetchProjects]);
 
   const handleChange = (event, newValue) => {

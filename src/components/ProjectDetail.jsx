@@ -5,6 +5,8 @@ import {
   ChevronRight, Layers, Layout, Globe, Package, Cpu, Code,
 } from "lucide-react";
 import Swal from 'sweetalert2';
+import { db, collection } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const TECH_ICONS = {
   React: Globe,
@@ -61,7 +63,7 @@ const ProjectStats = ({ project }) => {
         </div>
         <div className="flex-grow">
           <div className="text-lg md:text-xl font-semibold text-blue-200">{techStackCount}</div>
-          <div className="text-[10px] md:text-xs text-gray-400">Total Teknologi</div>
+          <div className="text-[10px] md:text-xs text-gray-400">Techstack</div>
         </div>
       </div>
 
@@ -71,7 +73,7 @@ const ProjectStats = ({ project }) => {
         </div>
         <div className="flex-grow">
           <div className="text-lg md:text-xl font-semibold text-purple-200">{featuresCount}</div>
-          <div className="text-[10px] md:text-xs text-gray-400">Fitur Utama</div>
+          <div className="text-[10px] md:text-xs text-gray-400">Features</div>
         </div>
       </div>
     </div>
@@ -102,18 +104,27 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
-    const selectedProject = storedProjects.find((p) => String(p.id) === id);
-    
-    if (selectedProject) {
-      const enhancedProject = {
-        ...selectedProject,
-        Features: selectedProject.Features || [],
-        TechStack: selectedProject.TechStack || [],
-        Github: selectedProject.Github || 'https://github.com/EkiZR',
-      };
-      setProject(enhancedProject);
+    async function fetchProject() {
+      try {
+        const docRef = doc(collection(db, "projects"), id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setProject({
+            id: docSnap.id,
+            ...data,
+            Features: data.Features || [],
+            TechStack: data.TechStack || [],
+            Github: data.Github || "",
+          });
+        } else {
+          setProject(null);
+        }
+      } catch (error) {
+        setProject(null);
+      }
     }
+    fetchProject();
   }, [id]);
 
   if (!project) {
@@ -169,9 +180,9 @@ const ProjectDetails = () => {
               </div>
 
               <div className="prose prose-invert max-w-none">
-                <p className="text-base md:text-lg text-gray-300/90 leading-relaxed">
+                <div className="text-base md:text-lg text-gray-300/90 leading-relaxed">
                   {project.Description}
-                </p>
+                </div>
               </div>
 
               <ProjectStats project={project} />

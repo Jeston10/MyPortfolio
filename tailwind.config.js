@@ -6,9 +6,7 @@ export default {
 			backdropBlur: {
 				sm: '4px',
 			  },
-			
-			
-		  },
 		},
+	},
 	plugins: [],
 }

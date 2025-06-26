@@ -19,6 +19,7 @@ const AnimatedBackground = () => {
 			currentScroll = newScroll
 
 			blobRefs.current.forEach((blob, index) => {
+				if (!blob) return;
 				const initialPos = initialPositions[index]
 
 				// Calculating movement in both X and Y direction
